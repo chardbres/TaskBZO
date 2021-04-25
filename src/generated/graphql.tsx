@@ -102,34 +102,70 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
-export type RegisterMutationVariables = Exact<{
+export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
 }>;
 
 
+export type LoginMutation = (
+  { __typename?: 'Mutation' }
+  & { login: (
+    { __typename?: 'UserResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>>, user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username' | 'milRank'>
+    )> }
+  ) }
+);
+
+export type RegisterMutationVariables = Exact<{
+  username: Scalars['String'];
+  password: Scalars['String'];
+  milRank: Scalars['String'];
+}>;
+
+
 export type RegisterMutation = (
   { __typename?: 'Mutation' }
-  & {
-    register: (
-      { __typename?: 'UserResponse' }
-      & {
-        errors?: Maybe<Array<(
-          { __typename?: 'FieldError' }
-          & Pick<FieldError, 'field' | 'message'>
-        )>>, user?: Maybe<(
-          { __typename?: 'User' }
-          & Pick<User, 'id' | 'username' | 'milRank'>
-        )>
-      }
-    )
-  }
+  & { register: (
+    { __typename?: 'UserResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>>, user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username' | 'milRank'>
+    )> }
+  ) }
 );
 
 
+export const LoginDocument = gql`
+    mutation Login($username: String!, $password: String!) {
+  login(username: $username, password: $password) {
+    errors {
+      field
+      message
+    }
+    user {
+      id
+      username
+      milRank
+    }
+  }
+}
+    `;
+
+export function useLoginMutation() {
+  return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
+};
 export const RegisterDocument = gql`
-    mutation Register($username: String!, $password: String!) {
-  register(username: $username, password: $password, milRank: "Captain") {
+    mutation Register($username: String!, $password: String!, $milRank: String!) {
+  register(username: $username, password: $password, milRank: $milRank) {
     errors {
       field
       message
