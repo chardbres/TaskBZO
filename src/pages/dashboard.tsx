@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { Fragment } from 'react'
+import { Header, Menu } from '../components/molecules'
 
 const Dashboard = () => {
     return (
-        <div>This is the dashboard!</div>
+        <Fragment>
+            <Header title='Dashboard' />
+            <Menu title='TaskBZO' />
+        </Fragment>
     )
 }
 
